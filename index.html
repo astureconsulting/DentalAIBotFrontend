@@ -6,23 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
-      --primary-blue: #1e88e5;
-      --light-blue: #e3f2fd;
-      --dark-blue: #0d47a1;
-      --text-dark: #263238;
+      --primary-teal: #46918E;
+      --light-teal: #e8f4f3;
+      --dark-teal: #3a7572;
+      --text-dark: #1f2937;
       --text-light: #ffffff;
-      --bubble-radius: 20px;
-      --input-bg: #f5f9ff;
-      --input-border: #90caf9;
-      --shadow: rgba(0, 0, 0, 0.1);
+      --bubble-radius: 18px;
+      --input-bg: #f8fafc;
+      --input-border: #cbd5e1;
+      --shadow: rgba(0, 0, 0, 0.08);
+      --shadow-lg: rgba(0, 0, 0, 0.12);
+      --success-green: #10b981;
+      --border-radius: 12px;
     }
     * {
       box-sizing: border-box;
     }
     body, html {
       margin: 0; padding: 0; height: 100%;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, var(--light-blue) 60%, var(--primary-blue) 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #e8f4f3 0%, #d1eae8 50%, #b8e0dd 100%);
       color: var(--text-dark);
       display: flex;
       justify-content: center;
@@ -30,27 +33,42 @@
       min-height: 100vh;
     }
     .chat-container {
-      background: #fff;
+      background: #ffffff;
       border-radius: 24px;
-      box-shadow: 0 8px 24px var(--shadow);
+      box-shadow: 0 20px 60px var(--shadow-lg), 0 0 0 1px rgba(0, 0, 0, 0.05);
       width: 100%;
-      max-width: 350px;
+      max-width: 420px;
       height: 100vh;
+      max-height: 800px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
       position: relative;
+      margin: 20px;
     }
     .chat-header {
-      background: var(--primary-blue);
+      background: linear-gradient(135deg, var(--primary-teal) 0%, var(--dark-teal) 100%);
       color: var(--text-light);
-      padding: 20px 60px;
+      padding: 20px;
       text-align: center;
-      font-weight: 700;
-      font-size: 20px;
-      letter-spacing: 1px;
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: 0.3px;
       user-select: none;
       position: relative;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .header-logo {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      opacity: 0.95;
+      flex-shrink: 0;
     }
     .status-indicator {
       position: absolute;
@@ -66,121 +84,130 @@
    
     .book-btn {
       position: absolute;
-      top: 18px;
-      left: 20px;
-      background: var(--dark-blue);
+      top: 50%;
+      right: 16px;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
       color: white;
-      border: none;
-      padding: 4px 10px;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 14px;
       border-radius: 20px;
       font-weight: 600;
       font-size: 12px;
       cursor: pointer;
-      margin-top: 58px;
-      margin-left: 190px;
-      box-shadow: 0 4px 12px var(--shadow);
-      transition: background 0.3s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
       user-select: none;
+      white-space: nowrap;
+      margin-left: auto;
     }
     .book-btn:hover, .book-btn:focus {
-      background: #0b3d91;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-50%) scale(1.05);
       outline: none;
     }
     .chat-messages {
       flex: 1;
-      padding: 20px 16px;
+      padding: 24px 20px;
       overflow-y: auto;
-      background: var(--light-blue);
+      background: linear-gradient(to bottom, #fafbfc 0%, #f1f5f9 100%);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
       scroll-behavior: smooth;
     }
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-messages::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    .chat-messages::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
     .message {
-      max-width: 80%;
-      padding: 14px 20px;
+      max-width: 85%;
+      padding: 14px 18px;
       border-radius: var(--bubble-radius);
       font-size: 15px;
-      line-height: 1.4;
-      box-shadow: 0 2px 6px var(--shadow);
+      line-height: 1.6;
+      box-shadow: 0 2px 8px var(--shadow);
       word-wrap: break-word;
       white-space: pre-wrap;
+      animation: messageSlideIn 0.3s ease-out;
+    }
+    @keyframes messageSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .user-message {
-      background: var(--primary-blue);
+      background: linear-gradient(135deg, var(--primary-teal) 0%, #5ba5a2 100%);
       color: var(--text-light);
       margin-left: auto;
-      border-bottom-right-radius: 6px;
-      text-align: right;
+      border-bottom-right-radius: 4px;
+      text-align: left;
+      box-shadow: 0 4px 12px rgba(70, 145, 142, 0.25);
     }
     .ai-message {
       background: #ffffff;
       color: var(--text-dark);
       margin-right: auto;
-      border-bottom-left-radius: 6px;
+      border-bottom-left-radius: 4px;
       text-align: left;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
     .ai-message.rtl {
       direction: rtl;
       text-align: right;
     }
-    .lang-switch {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .lang-btn {
-      background: transparent;
-      border: 2px solid var(--primary-blue);
-      color: var(--primary-blue);
-      border-radius: 16px;
-      padding: 6px 16px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s, color 0.3s;
-      user-select: none;
-    }
-    .lang-btn.active,
-    .lang-btn:hover {
-      background: var(--primary-blue);
-      color: var(--text-light);
-      outline: none;
-    }
     .chat-input-container {
-      padding: 16px;
-      background: #fff;
-      border-top: 2px solid var(--primary-blue);
+      padding: 18px 20px;
+      background: #ffffff;
+      border-top: 1px solid #e2e8f0;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       gap: 12px;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
     }
     #promptInput {
       flex: 1;
-      font-size: 16px;
-      padding: 14px 18px;
+      font-size: 15px;
+      padding: 12px 18px;
       border-radius: 24px;
       border: 2px solid var(--input-border);
       background: var(--input-bg);
       resize: none;
       outline: none;
       color: var(--text-dark);
-      box-shadow: inset 0 1px 4px var(--shadow);
-      transition: border-color 0.3s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
       min-height: 44px;
       max-height: 120px;
+      font-family: inherit;
     }
     #promptInput::placeholder {
       color: #90a4ae;
       text-align: center;
     }
     #promptInput:focus {
-      border-color: var(--primary-blue);
-      background: #f0f7ff;
+      border-color: var(--primary-teal);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(70, 145, 142, 0.1), 0 2px 6px rgba(0, 0, 0, 0.08);
     }
     #sendButton {
-      background: var(--primary-blue);
+      background: linear-gradient(135deg, var(--primary-teal) 0%, var(--dark-teal) 100%);
       border: none;
       border-radius: 50%;
       width: 48px;
@@ -190,14 +217,21 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-weight: 700;
-      box-shadow: 0 4px 12px var(--shadow);
-      transition: background 0.3s;
+      font-weight: 600;
+      font-size: 18px;
+      box-shadow: 0 4px 12px rgba(70, 145, 142, 0.3);
+      transition: all 0.3s ease;
+      flex-shrink: 0;
     }
     #sendButton:hover:not(:disabled),
     #sendButton:focus:not(:disabled) {
-      background: var(--dark-blue);
+      background: linear-gradient(135deg, var(--dark-teal) 0%, #2d5f5c 100%);
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(70, 145, 142, 0.4);
       outline: none;
+    }
+    #sendButton:active:not(:disabled) {
+      transform: scale(0.95);
     }
     #sendButton:disabled {
       opacity: 0.5;
@@ -205,45 +239,64 @@
     }
     .typing-indicator {
       display: none;
-      padding: 12px 16px;
+      padding: 16px 20px;
       margin-bottom: 12px;
       border-radius: var(--bubble-radius);
-      background: #fff;
-      border: 1px solid #e0e0e0;
-      max-width: 75%;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      max-width: 80px;
       margin-right: auto;
-      font-style: italic;
-      color: #666;
       user-select: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      animation: typingPulse 1.5s ease-in-out infinite;
     }
     .typing-indicator.active {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @keyframes typingPulse {
+      0%, 100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      50% {
+        opacity: 0.8;
+        transform: translateY(-2px);
+      }
     }
     .typing-dots {
       display: flex;
-      gap: 6px;
-      justify-content: flex-start;
-      margin-top: 4px;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
     }
     .typing-dots span {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background-color: var(--primary-blue);
-      animation: typing 1.4s infinite ease-in-out;
+      background: linear-gradient(135deg, var(--primary-teal) 0%, var(--dark-teal) 100%);
+      animation: typingBounce 1.4s infinite ease-in-out;
+      display: inline-block;
+      box-shadow: 0 2px 4px rgba(70, 145, 142, 0.3);
     }
     .typing-dots span:nth-child(1) {
-      animation-delay: -0.32s;
+      animation-delay: 0s;
     }
     .typing-dots span:nth-child(2) {
-      animation-delay: -0.16s;
+      animation-delay: 0.2s;
     }
-    @keyframes typing {
-      0%, 80%, 100% {
-        transform: scale(0);
+    .typing-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    @keyframes typingBounce {
+      0%, 60%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.7;
       }
-      40% {
-        transform: scale(1);
+      30% {
+        transform: translateY(-10px) scale(1.1);
+        opacity: 1;
       }
     }
     /* Modal Styles */
@@ -285,13 +338,13 @@
       background: none;
       border: none;
       font-size: 28px;
-      color: var(--primary-blue);
+      color: var(--primary-teal);
       cursor: pointer;
       transition: color 0.2s;
       user-select: none;
     }
     .modal-close:hover, .modal-close:focus {
-      color: var(--dark-blue);
+      color: var(--dark-teal);
       outline: none;
     }
     form label {
@@ -309,14 +362,14 @@
       transition: border-color 0.3s;
     }
     form input:focus {
-      border-color: var(--primary-blue);
+      border-color: var(--primary-teal);
       outline: none;
       background: #f0f7ff;
     }
     form button[type="submit"] {
       margin-top: 20px;
       width: 100%;
-      background: var(--primary-blue);
+      background: var(--primary-teal);
       color: white;
       border: none;
       padding: 14px;
@@ -328,7 +381,7 @@
     }
     form button[type="submit"]:hover,
     form button[type="submit"]:focus {
-      background: var(--dark-blue);
+      background: var(--dark-teal);
       outline: none;
     }
     #bookingMessage {
@@ -339,11 +392,29 @@
     @media (max-width: 480px) {
       .chat-container {
         height: 100vh;
+        max-height: 100vh;
         border-radius: 0;
         max-width: 100%;
+        margin: 0;
+      }
+      .chat-header {
+        padding: 16px;
+        gap: 8px;
+      }
+      .header-logo {
+        height: 32px;
+      }
+      .book-btn {
+        padding: 6px 10px;
+        font-size: 10px;
+        right: 12px;
       }
       #promptInput {
         font-size: 14px;
+        padding: 10px 16px;
+      }
+      .chat-messages {
+        padding: 20px 16px;
       }
     }
   </style>
@@ -351,7 +422,7 @@
 <body>
   <div class="chat-container" role="main" aria-label="Dintannklinikk Virtual Assistant Chatbot">
     <header class="chat-header">
-      Dintannklinikk Virtual Assistant
+      <img src="/logo.png" alt="Dintannklinikk Logo" class="header-logo" />
       <button class="book-btn" id="bookAppointmentBtn" aria-haspopup="dialog" aria-controls="bookingModal" title="Book Appointment">
         Book Appointment
       </button>
@@ -360,10 +431,6 @@
     </header>
 
     <section class="chat-messages" id="chatMessages" aria-live="polite" aria-relevant="additions">
-      <div class="lang-switch" role="group" aria-label="Language switcher">
-        <button class="lang-btn active" id="langEnBtn" aria-pressed="true" aria-label="Switch to English">English</button>
-        <button class="lang-btn" id="langNoBtn" aria-pressed="false" aria-label="Switch to Norwegian">Norsk</button>
-      </div>
       <div class="ai-message message" id="welcomeMsg" tabindex="0"></div>
     </section>
 
@@ -371,7 +438,6 @@
       <div class="typing-dots">
         <span></span><span></span><span></span>
       </div>
-      <span>Typing...</span>
     </div>
 
     <form class="chat-input-container" onsubmit="event.preventDefault(); handleSubmit();" role="search" aria-label="Chat input form">
@@ -393,7 +459,7 @@
   <div class="modal" id="bookingModal" role="dialog" aria-modal="true" aria-labelledby="bookingModalTitle" tabindex="-1">
     <div class="modal-content">
       <button class="modal-close" id="bookingModalClose" aria-label="Close booking form">&times;</button>
-      <h2 id="bookingModalTitle" style="color: var(--dark-blue); margin-bottom: 16px;">Book an Appointment</h2>
+      <h2 id="bookingModalTitle" style="color: var(--dark-teal); margin-bottom: 16px;">Book an Appointment</h2>
       <form id="bookingForm" novalidate>
         <label for="bookingDate">Select Date & Time:</label>
         <input type="datetime-local" id="bookingDate" name="bookingDate" required min="" />
@@ -417,11 +483,10 @@
       localStorage.setItem('sessionId', sessionId);
     }
 
-    // Language toggle logic
+    // Auto-detect language - no manual toggle needed
     let botLang = 'en';
+    let lastDetectedLang = 'en';
 
-    const langEnBtn = document.getElementById('langEnBtn');
-    const langNoBtn = document.getElementById('langNoBtn');
     const welcomeMsg = document.getElementById('welcomeMsg');
     const chatMessages = document.getElementById('chatMessages');
     const promptInput = document.getElementById('promptInput');
@@ -435,26 +500,10 @@
     const bookingMessage = document.getElementById('bookingMessage');
     const bookingDateInput = document.getElementById('bookingDate');
 
-    const welcomeTexts = {
-      en: "Welcome to Dintannklinikk! How can I assist you today? (You may write in English or Norwegian.)",
-      no: "Velkommen til Dintannklinikk! Hvordan kan jeg hjelpe deg i dag? (Du kan skrive på norsk eller engelsk.)"
-    };
-
-    function setLanguage(lang) {
-      botLang = lang;
-      langEnBtn.classList.toggle('active', lang === 'en');
-      langNoBtn.classList.toggle('active', lang === 'no');
-      langEnBtn.setAttribute('aria-pressed', lang === 'en');
-      langNoBtn.setAttribute('aria-pressed', lang === 'no');
-      renderWelcome();
-      promptInput.focus();
-    }
-
-    langEnBtn.addEventListener('click', () => setLanguage('en'));
-    langNoBtn.addEventListener('click', () => setLanguage('no'));
+    const welcomeText = "Welcome to Dintannklinikk! How can I assist you today? / Velkommen til Dintannklinikk! Hvordan kan jeg hjelpe deg i dag?";
 
     function renderWelcome() {
-      welcomeMsg.textContent = welcomeTexts[botLang];
+      welcomeMsg.textContent = welcomeText;
       welcomeMsg.focus();
     }
 
@@ -488,7 +537,22 @@
       typingIndicator.classList.remove('active');
     }
 
-    const API_URL = 'https://web-production-3a2ca.up.railway.app/chat';
+    // Auto-detect language from user input
+    function detectUserLanguage(text) {
+      const textLower = text.toLowerCase();
+      // Check for Norwegian characters
+      if (/[æøå]/.test(text)) return 'no';
+      // Common Norwegian words
+      const norwegianWords = ['hei', 'takk', 'tannlege', 'klinikk', 'behandling', 'jeg', 'du', 'vi', 'hvordan', 'hva', 'når', 'hvor', 'kan', 'skal', 'vil', 'må', 'og', 'på', 'til', 'med', 'for', 'er', 'var', 'har', 'ikke'];
+      const englishWords = ['hello', 'hi', 'thank', 'dentist', 'clinic', 'treatment', 'i', 'you', 'we', 'how', 'what', 'when', 'where', 'can', 'will', 'would', 'and', 'the', 'to', 'with', 'for', 'is', 'was', 'have', 'not'];
+      let norwegianCount = 0;
+      let englishCount = 0;
+      norwegianWords.forEach(word => { if (textLower.includes(word)) norwegianCount++; });
+      englishWords.forEach(word => { if (textLower.includes(word)) englishCount++; });
+      return (norwegianCount > englishCount) ? 'no' : 'en';
+    }
+
+    const API_URL = '/chat';
 
     async function handleSubmit() {
       const prompt = promptInput.value.trim();
@@ -499,20 +563,35 @@
       sendButton.disabled = true;
       showTyping();
 
+      // Auto-detect language from user input
+      const detectedLang = detectUserLanguage(prompt);
+      lastDetectedLang = detectedLang;
+      
+      // Use detected language if user hasn't manually selected one, or if input strongly suggests a language
+      const languageToUse = detectedLang;
+
       try {
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: prompt, session_id: sessionId })
+          body: JSON.stringify({ 
+            message: prompt, 
+            session_id: sessionId,
+            language: languageToUse
+          })
         });
         const data = await response.json();
         if (data.response) {
           createMessage(data.response, false);
+        } else if (data.error) {
+          createMessage(data.error, false);
         } else {
-          createMessage('Sorry, no response from server.', false);
+          const errorMsg = lastDetectedLang === 'no' ? 'Beklager, ingen respons fra serveren.' : 'Sorry, no response from server.';
+          createMessage(errorMsg, false);
         }
       } catch (error) {
-        createMessage('Sorry, there was an error connecting to the server.', false);
+        const errorMsg = lastDetectedLang === 'no' ? 'Beklager, det oppstod en feil ved tilkobling til serveren.' : 'Sorry, there was an error connecting to the server.';
+        createMessage(errorMsg, false);
       } finally {
         sendButton.disabled = false;
         hideTyping();
@@ -582,7 +661,7 @@
         email: document.getElementById('bookingEmail').value.trim()
       };
 
-      bookingMessage.style.color = '#1e88e5';
+      bookingMessage.style.color = '#46918E';
       bookingMessage.textContent = 'Submitting your appointment...';
 
       try {
@@ -610,7 +689,7 @@
 
     // Initial setup
     window.addEventListener('load', () => {
-      setLanguage('en');
+      renderWelcome();
       promptInput.focus();
     });
   </script>
